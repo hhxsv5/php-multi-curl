@@ -4,17 +4,32 @@ require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 use Hhxsv5\PhpMultiCurl\MultiCurl;
 
-$c1Ret = null;
+//single http request
 $c1 = new Curl();
-$c1->makeGet('https://passport.medlinker.com/sections');
+$c1->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+var_dump($c1->exec());//get response, OR var_dump($c1->getResponse());
 
-$c2Ret = null;
+
+//multi http request
 $c2 = new Curl();
-$c2->makeGet('https://passport.medlinker.com/titles');
+$c2->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+
+$c3 = new Curl();
+$c3->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 
 $mc = new MultiCurl();
-$mc->addCurls([$c1, $c2]);
 
+$mc->addCurls([$c2, $c3]);
 $ret = $mc->exec();
+var_dump($c2->getResponse(), $c3->getResponse());//get response
 
-var_dump($c1->getResponse(), $c2->getResponse());
+//reuse $mc
+$c4 = new Curl();
+$c4->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+
+$c5 = new Curl();
+$c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
+
+$mc->addCurls([$c4, $c5]);
+$ret = $mc->exec();
+var_dump($c4->getResponse(), $c5->getResponse());//get response

@@ -8,9 +8,11 @@ class Curl
 
     protected $response;
 
+    protected $multi = false;
+
     protected $logPath;
 
-    protected $defaultOptions = [
+    protected static $defaultOptions = [
         //启用时会将头文件的信息作为数据流输出
         CURLOPT_HEADER         => false,
         //禁止 cURL 验证对等证书
@@ -35,7 +37,7 @@ class Curl
     public function __construct(array $options = [])
     {
         $this->handle = curl_init();
-        $finalOptions = $options + $this->defaultOptions;
+        $finalOptions = $options + self::$defaultOptions;
         curl_setopt_array($this->handle, $finalOptions);
     }
 
@@ -85,13 +87,37 @@ class Curl
         }
     }
 
-    public function setResponse($response)
+    public function exec()
     {
-        $this->response = $response;
+        $this->response = curl_exec($this->handle);
+
+        if ($errno = curl_errno($this->handle)) {
+            if ($this->logPath) {
+                $info = curl_getinfo($this->handle);
+                $logContent = sprintf('[CURL][URL: %s][ERROR: %s,%s]%s', $info['url'], $errno, curl_error($this->handle), PHP_EOL);
+                file_put_contents($this->logPath, $logContent, FILE_APPEND);
+            }
+            $this->response = false;
+        }
+
+        return $this->response;
+    }
+
+    public function setMulti($isMulti)
+    {
+        $this->multi = (bool)$isMulti;
     }
 
     public function getResponse()
     {
+        if ($this->response !== null) {
+            return $this->response;
+        }
+
+        if ($this->multi) {
+            $this->response = curl_multi_getcontent($this->handle);
+        }
+
         return $this->response;
     }
 

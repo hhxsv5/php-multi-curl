@@ -20,6 +20,7 @@ class MultiCurl
         if ($code !== CURLM_OK) {
             return false;
         }
+        $curl->setMulti(true);
         $this->curls[] = $curl;
         return true;
     }
@@ -61,17 +62,20 @@ class MultiCurl
 //            }
 //        }
 
-        foreach ($this->curls as $curl) {
-            $response = curl_multi_getcontent($curl->getHandle());
-            $curl->setResponse($response);
-        }
+        $this->clean();
     }
 
-    public function __destruct()
+    protected function clean()
     {
         foreach ($this->curls as $curl) {
             curl_multi_remove_handle($this->handle, $curl->getHandle());
         }
+        $this->curls = [];
+    }
+
+    public function __destruct()
+    {
+        $this->clean();
         curl_multi_close($this->handle);
     }
 }
