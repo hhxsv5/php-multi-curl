@@ -32,7 +32,7 @@ class MultiCurl
         return true;
     }
 
-    public function exec(array &$responses = [])
+    public function exec()
     {
         if (count($this->curls) == 0) {
             return false;
@@ -62,7 +62,8 @@ class MultiCurl
 //        }
 
         foreach ($this->curls as $curl) {
-            $responses[] = curl_multi_getcontent($curl->getHandle());
+            $response = curl_multi_getcontent($curl->getHandle());
+            $curl->setResponse($response);
         }
     }
 

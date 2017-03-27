@@ -4,9 +4,9 @@ namespace Hhxsv5\PhpMultiCurl;
 
 class Curl
 {
-    protected $uid;
-
     protected $handle;
+
+    protected $response;
 
     protected $logPath;
 
@@ -34,7 +34,6 @@ class Curl
 
     public function __construct(array $options = [])
     {
-        $this->uid = uniqid('', true);
         $this->handle = curl_init();
         $finalOptions = $options + $this->defaultOptions;
         curl_setopt_array($this->handle, $finalOptions);
@@ -86,14 +85,19 @@ class Curl
         }
     }
 
+    public function setResponse($response)
+    {
+        $this->response = $response;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
     public function getHandle()
     {
         return $this->handle;
-    }
-
-    public function getUID()
-    {
-        return $this->uid;
     }
 
     public function __destruct()

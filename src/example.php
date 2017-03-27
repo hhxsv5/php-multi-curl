@@ -15,7 +15,6 @@ $c2->makeGet('https://passport.medlinker.com/titles');
 $mc = new MultiCurl();
 $mc->addCurls([$c1, $c2]);
 
-$result = [];
-$ret = $mc->exec($result);
+$ret = $mc->exec();
 
-var_dump($result);
+var_dump($c1->getResponse(), $c2->getResponse());
