@@ -52,3 +52,7 @@ $mc->addCurls([$c4, $c5]);
 $ret = $mc->exec();
 var_dump($c4->getResponse(), $c5->getResponse());//get response
 ```
+
+## License
+
+[MIT](#https://github.com/hhxsv5/php-multi-curl/blob/master/LICENSE)
