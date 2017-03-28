@@ -32,33 +32,32 @@ class MultiCurl
         return true;
     }
 
-    public function exec()
+    public function exec($selectTimeout = 1.0)
     {
         if (count($this->curls) == 0) {
             return false;
         }
 
-        $running = null;
-        do {
-            usleep(10);
-            curl_multi_exec($this->handle, $running);
-        } while ($running > 0);
-
-
-//        $active = null;
+//        $running = null;
 //        do {
-//            $mrc = curl_multi_exec($this->handle, $active);
-//            usleep(10);
-//        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-//
-//        while ($active && $mrc == CURLM_OK) {
-//            if (curl_multi_select($this->handle) != -1) {
-//                do {
-//                    $mrc = curl_multi_exec($this->handle, $active);
-//                } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-//            }
-//            usleep(10);
-//        }
+//            usleep(100);
+//            curl_multi_exec($this->handle, $running);
+//        } while ($running > 0);
+
+
+        // The first curl_multi_select often times out no matter what, but is usually required for fast transfers
+        $timeout = 0.001;
+        $active = false;
+        do {
+            while (($mrc = curl_multi_exec($this->handle, $active)) == CURLM_CALL_MULTI_PERFORM) {
+                ;
+            }
+            if ($active && curl_multi_select($this->handle, $timeout) === -1) {
+                // Perform a usleep if a select returns -1: https://bugs.php.net/bug.php?id=61141
+                usleep(150);
+            }
+            $timeout = $selectTimeout;
+        } while ($active);
 
         $this->clean();
     }
