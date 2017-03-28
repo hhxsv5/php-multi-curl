@@ -1,7 +1,7 @@
 {
   "name": "hhxsv5/php-multi-curl",
   "license": "MIT",
-  "description": "Parallel curl http calls for PHP library.",
+  "description": "A php wrapper class for multi-curl is used to handle parallel requests efficiently.",
   "keywords": [
     "php-multi-curl",
     "curl",
