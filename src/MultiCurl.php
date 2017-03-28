@@ -38,26 +38,27 @@ class MultiCurl
             return false;
         }
 
-//        $running = null;
-//        do {
-//            usleep(1);
-//            curl_multi_exec($this->handle, $running);
-//        } while ($running > 0);
-
-
-        $active = null;
+        $running = null;
         do {
-            $mrc = curl_multi_exec($this->handle, $active);
-        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+            usleep(10);
+            curl_multi_exec($this->handle, $running);
+        } while ($running > 0);
 
-        while ($active && $mrc == CURLM_OK) {
-            if (curl_multi_select($this->handle) == -1) {
-                usleep(1);
-            }
-            do {
-                $mrc = curl_multi_exec($this->handle, $active);
-            } while ($mrc == CURLM_CALL_MULTI_PERFORM);
-        }
+
+//        $active = null;
+//        do {
+//            $mrc = curl_multi_exec($this->handle, $active);
+//            usleep(10);
+//        } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+//
+//        while ($active && $mrc == CURLM_OK) {
+//            if (curl_multi_select($this->handle) != -1) {
+//                do {
+//                    $mrc = curl_multi_exec($this->handle, $active);
+//                } while ($mrc == CURLM_CALL_MULTI_PERFORM);
+//            }
+//            usleep(10);
+//        }
 
         $this->clean();
     }
