@@ -10,7 +10,7 @@ A php wrapper class for multi-curl is used to handle parallel requests efficient
 
 ## Installation via Composer
 
-```
+```BASH
 composer require "hhxsv5/php-multi-curl:~1.0" -vvv
 ```
 
