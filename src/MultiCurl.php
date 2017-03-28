@@ -11,7 +11,6 @@ class MultiCurl
     public function __construct()
     {
         $this->handle = curl_multi_init();
-        $this->curls = [];
     }
 
     public function addCurl(Curl $curl)
