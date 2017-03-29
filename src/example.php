@@ -28,7 +28,7 @@ $c3->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 $mc = new MultiCurl();
 
 $mc->addCurls([$c2, $c3]);
-$ret = $mc->exec();//return true or false
+$ret = $mc->exec();
 var_dump($ret);
 if ($ret) {
     //success
@@ -46,7 +46,7 @@ $c5 = new Curl();
 $c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 
 $mc->addCurls([$c4, $c5]);
-$ret = $mc->exec();//return true or false
+$ret = $mc->exec();
 var_dump($ret);
 if ($ret) {
     //success
