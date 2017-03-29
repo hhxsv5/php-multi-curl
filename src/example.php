@@ -7,8 +7,15 @@ use Hhxsv5\PhpMultiCurl\MultiCurl;
 //single http request
 $c1 = new Curl();
 $c1->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
-$c1->exec();
-var_dump($c1->getResponse());//get response
+$ret = $c1->exec();
+var_dump($ret);
+if ($ret) {
+    //success
+    var_dump($c1->getResponse());
+} else {
+    //fail
+    var_dump($c1->getError());
+}
 
 
 //multi http request
@@ -22,11 +29,12 @@ $mc = new MultiCurl();
 
 $mc->addCurls([$c2, $c3]);
 $ret = $mc->exec();//return true or false
+var_dump($ret);
 if ($ret) {
     //success
     var_dump($c2->getResponse(), $c3->getResponse());
 } else {
-    //some curls execute failed
+    //execute some curls failed
     var_dump($c2->getError(), $c3->getError());
 }
 
@@ -39,10 +47,11 @@ $c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 
 $mc->addCurls([$c4, $c5]);
 $ret = $mc->exec();//return true or false
+var_dump($ret);
 if ($ret) {
     //success
     var_dump($c4->getResponse(), $c5->getResponse());
 } else {
-    //some curls execute failed
+    //execute some curls failed
     var_dump($c4->getError(), $c5->getError());
 }
