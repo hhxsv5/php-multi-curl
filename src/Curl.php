@@ -116,6 +116,11 @@ class Curl
         return $this->handle;
     }
 
+    public function getError()
+    {
+        return $this->error;
+    }
+
     public function __destruct()
     {
         curl_close($this->handle);

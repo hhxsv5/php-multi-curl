@@ -21,8 +21,14 @@ $c3->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 $mc = new MultiCurl();
 
 $mc->addCurls([$c2, $c3]);
-$ret = $mc->exec();
-var_dump($c2->getResponse(), $c3->getResponse());//get response
+$ret = $mc->exec();//return true or false
+if ($ret) {
+    //success
+    var_dump($c2->getResponse(), $c3->getResponse());
+} else {
+    //some curls execute failed
+    var_dump($c2->getError(), $c3->getError());
+}
 
 //reuse $mc
 $c4 = new Curl();
@@ -32,5 +38,11 @@ $c5 = new Curl();
 $c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 
 $mc->addCurls([$c4, $c5]);
-$ret = $mc->exec();
-var_dump($c4->getResponse(), $c5->getResponse());//get response
+$ret = $mc->exec();//return true or false
+if ($ret) {
+    //success
+    var_dump($c4->getResponse(), $c5->getResponse());
+} else {
+    //some curls execute failed
+    var_dump($c4->getError(), $c5->getError());
+}
