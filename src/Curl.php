@@ -2,13 +2,9 @@
 
 namespace Hhxsv5\PhpMultiCurl;
 
-class Curl
+class Curl extends BaseCurl
 {
-    protected $handle;
-
     protected $response;
-
-    protected $error;
 
     protected $multi = false;
 
@@ -34,7 +30,7 @@ class Curl
         CURLOPT_USERAGENT      => 'PHP Multi Curl Client V1.0',
     ];
 
-    public function __construct(array $options = [])
+    protected function init(array $options = [])
     {
         $this->handle = curl_init();
         $finalOptions = $options + self::$defaultOptions;
@@ -77,7 +73,11 @@ class Curl
 
         $this->fetchResponse($response);
 
-        return true;
+        if ($this->response === false) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function setMulti($isMulti)
@@ -95,11 +95,20 @@ class Curl
             $this->response = $response;
         }
 
-        if ($errno = curl_errno($this->handle)) {
-            $error = curl_error($this->handle);
-            $this->error = [$errno, $error];
+        if ($this->hasError()) {
             $this->response = false;
         }
+    }
+
+    protected function hasError()
+    {
+        $errno = curl_errno($this->handle);
+        $error = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
+        if ($errno || $error) {
+            $this->error = [$errno, $error];
+            return true;
+        }
+        return false;
     }
 
     public function getResponse()
@@ -114,6 +123,11 @@ class Curl
     public function getHandle()
     {
         return $this->handle;
+    }
+
+    public function setError(array $error = null)
+    {
+        $this->error = $error;
     }
 
     public function getError()

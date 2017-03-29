@@ -2,15 +2,22 @@
 
 namespace Hhxsv5\PhpMultiCurl;
 
-class MultiCurl
+class MultiCurl extends BaseCurl
 {
-    protected $handle;
+    /**
+     * @var Curl[]
+     */
     protected $curls = [];
-    protected $contentMap = [];
 
-    public function __construct()
+    protected function init(array $options = [])
     {
         $this->handle = curl_multi_init();
+
+        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+            foreach ($options as $option => $value) {
+                curl_multi_setopt($this->handle, $option, $value);
+            }
+        }
     }
 
     public function addCurl(Curl $curl)
@@ -27,7 +34,9 @@ class MultiCurl
     public function addCurls(array $curls)
     {
         foreach ($curls as $curl) {
-            $this->addCurl($curl);
+            if (!$this->addCurl($curl)) {
+                return false;
+            }
         }
         return true;
     }
@@ -37,13 +46,6 @@ class MultiCurl
         if (count($this->curls) == 0) {
             return false;
         }
-
-//        $running = null;
-//        do {
-//            usleep(100);
-//            curl_multi_exec($this->handle, $running);
-//        } while ($running > 0);
-
 
         // The first curl_multi_select often times out no matter what, but is usually required for fast transfers
         $timeout = 0.001;
@@ -59,22 +61,34 @@ class MultiCurl
             $timeout = $selectTimeout;
         } while ($active);
 
-        $this->clean();
 
-        return true;
-    }
-
-    protected function clean()
-    {
+        //clean to re-exec && check success
+        $success = true;
         foreach ($this->curls as $curl) {
+            $handle = $curl->getHandle();
+            $errno = curl_errno($handle);
+            $error = curl_error($handle);//Fix: curl_errno() always return 0 when fail
+            if ($errno || $error) {
+                $curl->setError([$errno, $error]);
+                $success = false;
+            }
+
             curl_multi_remove_handle($this->handle, $curl->getHandle());
         }
         $this->curls = [];
+
+        return $success;
+    }
+
+    protected function hasError()
+    {
+        //TODO: implements for PHP 7.1+
+        //check curl_multi_errno($this->handle)
+        return false;
     }
 
     public function __destruct()
     {
-        $this->clean();
         curl_multi_close($this->handle);
     }
 }
