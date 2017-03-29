@@ -8,9 +8,9 @@ class Curl
 
     protected $response;
 
-    protected $multi = false;
+    protected $error;
 
-    protected $logPath;
+    protected $multi = false;
 
     protected static $defaultOptions = [
         //启用时会将头文件的信息作为数据流输出
@@ -56,14 +56,6 @@ class Curl
         curl_setopt($this->handle, CURLOPT_URL, $url);
         curl_setopt($this->handle, CURLOPT_HTTPGET, true);//HTTP GET
         $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
-
-        if ($this->logPath) {
-//            $f = fopen($this->logPath, 'w+');
-//            curl_setopt($this->handle, CURLOPT_VERBOSE, true);
-//            curl_setopt($this->handle, CURLOPT_STDERR, $f);
-            $logContent = sprintf('[CURL][GET: %s]%s', $url, PHP_EOL);
-            file_put_contents($this->logPath, $logContent, FILE_APPEND);
-        }
     }
 
     public function makePost($url, $params = null, array $headers = [])
@@ -77,30 +69,15 @@ class Curl
         }
 
         $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
-
-        if ($this->logPath) {
-//            $f = fopen($this->logPath, 'w+');
-//            curl_setopt($this->handle, CURLOPT_VERBOSE, true);
-//            curl_setopt($this->handle, CURLOPT_STDERR, $f);
-            $logContent = sprintf('[CURL][POST: %s,%s]%s', $url, $params, PHP_EOL);
-            file_put_contents($this->logPath, $logContent, FILE_APPEND);
-        }
     }
 
     public function exec()
     {
-        $this->response = curl_exec($this->handle);
+        $response = curl_exec($this->handle);
 
-        if ($errno = curl_errno($this->handle)) {
-            if ($this->logPath) {
-                $info = curl_getinfo($this->handle);
-                $logContent = sprintf('[CURL][URL: %s][ERROR: %s,%s]%s', $info['url'], $errno, curl_error($this->handle), PHP_EOL);
-                file_put_contents($this->logPath, $logContent, FILE_APPEND);
-            }
-            $this->response = false;
-        }
+        $this->fetchResponse($response);
 
-        return $this->response;
+        return true;
     }
 
     public function setMulti($isMulti)
@@ -108,14 +85,27 @@ class Curl
         $this->multi = (bool)$isMulti;
     }
 
-    public function getResponse()
+    protected function fetchResponse($response = null)
     {
-        if ($this->response !== null) {
-            return $this->response;
+        if ($response === null) {
+            if ($this->multi) {
+                $this->response = curl_multi_getcontent($this->handle);
+            }
+        } else {
+            $this->response = $response;
         }
 
-        if ($this->multi) {
-            $this->response = curl_multi_getcontent($this->handle);
+        if ($errno = curl_errno($this->handle)) {
+            $error = curl_error($this->handle);
+            $this->error = [$errno, $error];
+            $this->response = false;
+        }
+    }
+
+    public function getResponse()
+    {
+        if ($this->response === null) {
+            $this->fetchResponse();
         }
 
         return $this->response;

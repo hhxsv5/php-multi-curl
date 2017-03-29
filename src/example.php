@@ -7,7 +7,8 @@ use Hhxsv5\PhpMultiCurl\MultiCurl;
 //single http request
 $c1 = new Curl();
 $c1->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
-var_dump($c1->exec());//get response, OR var_dump($c1->getResponse());
+$c1->exec();
+var_dump($c1->getResponse());//get response
 
 
 //multi http request

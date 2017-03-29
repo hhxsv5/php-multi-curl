@@ -60,6 +60,8 @@ class MultiCurl
         } while ($active);
 
         $this->clean();
+
+        return true;
     }
 
     protected function clean()
