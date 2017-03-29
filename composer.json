@@ -1,5 +1,6 @@
 {
   "name": "hhxsv5/php-multi-curl",
+  "type": "library",
   "license": "MIT",
   "description": "A php wrapper class for multi-curl is used to handle parallel requests efficiently.",
   "keywords": [
@@ -8,6 +9,7 @@
     "asynchronous",
     "parallel"
   ],
+  "homepage": "https://github.com/hhxsv5/php-multi-curl",
   "authors": [
     {
       "name": "Xie Biao",
