@@ -4,9 +4,17 @@ require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 use Hhxsv5\PhpMultiCurl\MultiCurl;
 
+$getUrl = 'http://ip.taobao.com/service/getIpInfo.php?ip=myip';
+$postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtoken';
+
 //single http request
-$c1 = new Curl();
-$c1->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+$options = [//define the curl options
+    CURLOPT_TIMEOUT        => 10,
+    CURLOPT_CONNECTTIMEOUT => 5,
+    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
+];
+$c1 = new Curl($options);
+$c1->makeGet($getUrl);
 $ret = $c1->exec();
 var_dump($ret);
 if ($ret) {
@@ -20,10 +28,10 @@ if ($ret) {
 
 //multi http request
 $c2 = new Curl();
-$c2->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+$c2->makeGet($getUrl);
 
 $c3 = new Curl();
-$c3->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
+$c3->makePost($postUrl);
 
 $mc = new MultiCurl();
 
@@ -40,10 +48,10 @@ if ($ret) {
 
 //reuse $mc
 $c4 = new Curl();
-$c4->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
+$c4->makeGet($getUrl);
 
 $c5 = new Curl();
-$c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
+$c5->makePost($postUrl);
 
 $mc->addCurls([$c4, $c5]);
 $ret = $mc->exec();
