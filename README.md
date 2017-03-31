@@ -1,7 +1,7 @@
 PHP Multi-Curl
 ======
 
-A php wrapper class for multi-curl is used to handle parallel requests efficiently.  
+A simple and efficient library for multi-curl is used to handle parallel requests.
 
 ## Requirements
 
