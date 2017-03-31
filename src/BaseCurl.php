@@ -21,7 +21,7 @@ abstract class BaseCurl
 
     abstract protected function init(array $options = []);
 
-    abstract protected function exec();
+    abstract protected function exec(array $options = []);
 
     abstract protected function hasError();
 

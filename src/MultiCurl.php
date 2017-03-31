@@ -41,13 +41,16 @@ class MultiCurl extends BaseCurl
         return true;
     }
 
-    public function exec($selectTimeout = 1.0)
+    public function exec(array $options = [])
     {
         if (count($this->curls) == 0) {
             return false;
         }
 
-        // The first curl_multi_select often times out no matter what, but is usually required for fast transfers
+        //Default select timeout
+        $selectTimeout = isset($options['selectTimeout']) ? $options['selectTimeout'] : 1.0;
+
+        //The first curl_multi_select often times out no matter what, but is usually required for fast transfers
         $timeout = 0.001;
         $active = false;
         do {
@@ -62,12 +65,12 @@ class MultiCurl extends BaseCurl
         } while ($active);
 
 
-        //clean to re-exec && check success
+        //Clean to re-exec && check success
         $success = true;
         foreach ($this->curls as $curl) {
             $handle = $curl->getHandle();
             $errno = curl_errno($handle);
-            $error = curl_error($handle);//Fix: curl_errno() always return 0 when fail
+            $error = curl_error($handle);//Fixed: curl_errno() always return 0 when fail
             if ($errno || $error) {
                 $curl->setError([$errno, $error]);
                 $success = false;

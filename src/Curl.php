@@ -62,7 +62,7 @@ class Curl extends BaseCurl
         $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
     }
 
-    public function exec()
+    public function exec(array $options = [])
     {
         $response = curl_exec($this->handle);
 
