@@ -25,6 +25,11 @@ abstract class BaseCurl
 
     abstract protected function hasError();
 
+    public function getError()
+    {
+        return $this->error;
+    }
+
     public function getHandle()
     {
         return $this->handle;
