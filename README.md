@@ -83,6 +83,12 @@ if ($ret) {
 }
 ```
 
+## TODO
+
+* HTTP PUT/DELETE
+* Download file
+* Anything what you want
+
 ## License
 
 [MIT](https://github.com/hhxsv5/php-multi-curl/blob/master/LICENSE)
