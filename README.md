@@ -8,7 +8,7 @@ A simple and efficient library for multi-curl is used to handle parallel request
 * PHP 5.4 or later
 * PHP cURL extension
 
-## Installation via Composer
+## Installation via Composer([packagist](https://packagist.org/packages/hhxsv5/php-multi-curl))
 
 ```BASH
 composer require "hhxsv5/php-multi-curl:~1.0" -vvv
