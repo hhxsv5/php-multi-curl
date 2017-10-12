@@ -55,7 +55,22 @@ class Curl extends BaseCurl
         curl_setopt($this->handle, CURLOPT_POST, true);//HTTP POST
 
         if (is_string($params) || is_array($params)) {
-            is_array($params) AND $params = http_build_query($params);
+
+            //CURLFile support
+            if (is_array($params)) {
+                $hasUploadFile = false;
+                if (version_compare(PHP_VERSION, '5.5.0') >= 0) {//CURLFile: since 5.5.0
+                    foreach ($params as $k => $v) {
+                        if ($v instanceof \CURLFile) {
+                            $hasUploadFile = true;
+                            break;
+                        }
+                    }
+                }
+                $hasUploadFile OR $params = http_build_query($params);
+            }
+
+            //$params: array => multipart/form-data, string => application/x-www-form-urlencoded
             curl_setopt($this->handle, CURLOPT_POSTFIELDS, $params);
         }
 
