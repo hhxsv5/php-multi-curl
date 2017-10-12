@@ -85,7 +85,7 @@ if ($ret) {
 ```
 
 ```PHP
-//upload file
+//Upload file
 $postUrl = 'http://localhost/upload.php';//<?php var_dump($_FILES);
 $c = new Curl();
 $file1 = new \CURLFile('./olddriver.gif', 'image/gif', 'name1');
@@ -102,10 +102,30 @@ if ($ret) {
 }
 ```
 
+```PHP
+//Download file
+$fileUrl = 'http://localhost/test.gif';
+$options = [//The custom the curl options
+    CURLOPT_TIMEOUT        => 3600,//1 hour
+    CURLOPT_CONNECTTIMEOUT => 10,
+];
+$c = new Curl($options);
+$c->makeGet($fileUrl);
+$ret = $c->exec();
+var_dump($ret);
+if ($ret) {
+    //Success
+    $targetFile = './a/b/c/test.gif';
+    var_dump($c->responseToFile($targetFile));
+} else {
+    //Fail
+    var_dump($c->getError());
+}
+```
+
 ## TODO
 
 * HTTP PUT/DELETE
-* Download file
 * Anything what you want
 
 ## License

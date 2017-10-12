@@ -118,6 +118,16 @@ class Curl extends BaseCurl
         return false;
     }
 
+    public function responseToFile($filename)
+    {
+        $response = $this->getResponse();
+        $folder = dirname($filename);
+        if (!file_exists($folder)) {
+            mkdir($folder, 0777, true);
+        }
+        return file_put_contents($filename, $response);
+    }
+
     public function getResponse()
     {
         if ($this->response === null) {
