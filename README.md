@@ -15,17 +15,14 @@ composer require "hhxsv5/php-multi-curl:~1.0" -vvv
 ```
 
 ## Usage
- 
+
 ```PHP
 //require '../vendor/autoload.php';
-
 use Hhxsv5\PhpMultiCurl\Curl;
 use Hhxsv5\PhpMultiCurl\MultiCurl;
 
-$getUrl = 'http://www.weather.com.cn/data/cityinfo/101270101.html';
-$postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtoken';
-
 //Single http request
+$getUrl = 'http://www.weather.com.cn/data/cityinfo/101270101.html';
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,
@@ -42,65 +39,66 @@ if ($ret) {
     //Fail
     var_dump($c1->getError());
 }
-
-
+```
+ 
+```PHP
 //Multi http request
-$c2 = new Curl();
-$c2->makeGet($getUrl);
+$getUrl = 'http://www.weather.com.cn/data/cityinfo/101270101.html';
+$postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtoken';
 
-$c3 = new Curl();
-$c3->makePost($postUrl);
+$c1 = new Curl();
+$c1->makeGet($getUrl);
+
+$c2 = new Curl();
+$c2->makePost($postUrl);
 
 $mc = new MultiCurl();
 
-$mc->addCurls([$c2, $c3]);
+$mc->addCurls([$c1, $c2]);
 $ret = $mc->exec();
 var_dump($ret);
 if ($ret) {
     //Success
-    var_dump($c2->getResponse(), $c3->getResponse());
+    var_dump($c1->getResponse(), $c2->getResponse());
 } else {
     //Some curls failed
-    var_dump($c2->getError(), $c3->getError());
+    var_dump($c1->getError(), $c2->getError());
 }
 
 //Reuse $mc
+$c3 = new Curl();
+$c3->makeGet($getUrl);
+
 $c4 = new Curl();
-$c4->makeGet($getUrl);
+$c4->makePost($postUrl);
 
-$c5 = new Curl();
-$c5->makePost($postUrl);
-
-$mc->addCurls([$c4, $c5]);
+$mc->addCurls([$c3, $c4]);
 $ret = $mc->exec();
 var_dump($ret);
 if ($ret) {
     //Success
-    var_dump($c4->getResponse(), $c5->getResponse());
+    var_dump($c3->getResponse(), $c4->getResponse());
 } else {
     //Some curls failed
-    var_dump($c4->getError(), $c5->getError());
+    var_dump($c3->getError(), $c4->getError());
 }
+```
 
+```PHP
 //upload file
 $postUrl = 'http://localhost/upload.php';//<?php var_dump($_FILES);
-$options = [//The custom the curl options
-    CURLOPT_TIMEOUT        => 10,
-    CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
-];
-$c6 = new Curl($options);
+$c = new Curl();
 $file1 = new \CURLFile('./olddriver.gif', 'image/gif', 'name1');
 $params = ['file1' => $file1];
-$c6->makePost($postUrl, $params);
-$ret = $c6->exec();
+$c->makePost($postUrl, $params);
+$ret = $c->exec();
 var_dump($ret);
 if ($ret) {
     //Success
-    var_dump($c6->getResponse());
+    var_dump($c->getResponse());
 } else {
     //Fail
-    var_dump($c6->getError());
+    var_dump($c->getError());
 }
 ```
 
