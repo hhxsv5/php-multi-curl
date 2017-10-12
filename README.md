@@ -125,7 +125,6 @@ if ($ret) {
 
 ## TODO
 
-* HTTP PUT/DELETE
 * Anything what you want
 
 ## License
