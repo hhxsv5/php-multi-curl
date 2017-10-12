@@ -10,17 +10,17 @@ $options = [//The custom the curl options
     CURLOPT_CONNECTTIMEOUT => 5,
     CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
 ];
-$c1 = new Curl($options);
+$c = new Curl($options);
 
 $file1 = new CURLFile('./olddriver.gif', 'image/gif', 'name1');
 $params = ['file1' => $file1];
-$c1->makePost($postUrl, $params);
-$ret = $c1->exec();
+$c->makePost($postUrl, $params);
+$ret = $c->exec();
 var_dump($ret);
 if ($ret) {
     //Success
-    var_dump($c1->getResponse());
+    var_dump($c->getResponse());
 } else {
     //Fail
-    var_dump($c1->getError());
+    var_dump($c->getError());
 }
