@@ -2,12 +2,12 @@
   "name": "hhxsv5/php-multi-curl",
   "type": "library",
   "license": "MIT",
-  "description": "A simple and efficient library for multi-curl is used to handle parallel requests.",
+  "description": "A simple and efficient library wrapping curl_multi_* is used to handle parallel http requests.",
   "keywords": [
-    "php-multi-curl",
     "curl",
-    "asynchronous",
-    "parallel"
+    "multi-curl",
+    "parallel-request",
+    "multi-http-request"
   ],
   "homepage": "https://github.com/hhxsv5/php-multi-curl",
   "authors": [
