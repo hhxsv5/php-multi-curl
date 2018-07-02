@@ -6,6 +6,7 @@ class Curl
 {
     use ResponseParser;
 
+    protected $id;
     protected $handle;
 
     /**
@@ -32,11 +33,17 @@ class Curl
         CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
     ];
 
-    public function __construct(array $options = [])
+    public function __construct($id = null, array $options = [])
     {
+        $this->id = $id;
         $this->handle = curl_init();
         $finalOptions = $options + self::$defaultOptions;
         curl_setopt_array($this->handle, $finalOptions);
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function makeGet($url, $params = null, array $headers = [])
