@@ -89,10 +89,10 @@ class Curl
             $responseStr = curl_exec($this->handle);
         }
 
-        $id = spl_object_hash($this);
         $errno = curl_errno($this->handle);
         $errstr = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
-        $this->response = $this->toResponse($id, $responseStr, $errno, $errstr);
+        $url = curl_getinfo($this->handle, CURLINFO_EFFECTIVE_URL);
+        $this->response = $this->toResponse($url, $responseStr, $errno, $errstr);
         return $this->response;
     }
 

@@ -4,7 +4,7 @@ namespace Hhxsv5\PhpMultiCurl;
 
 class Response
 {
-    protected $id;
+    protected $url;
     protected $httpCode;
     protected $headers = [];
     protected $body    = '';
@@ -15,13 +15,18 @@ class Response
      */
     protected $error = [];
 
-    public function __construct($id = null, $httpCode = 0, $body = '', array $headers = [], array $error = [])
+    public function __construct($url = null, $httpCode = 0, $body = '', array $headers = [], array $error = [])
     {
-        $this->id = $id ?: uniqid('', true);
+        $this->url = $url;
         $this->httpCode = $httpCode;
         $this->headers = array_change_key_case($headers, CASE_LOWER);
         $this->body = $body;
         $this->error = $error;
+    }
+
+    public function getUrl()
+    {
+        return $this->url;
     }
 
     public function getHttpCode()

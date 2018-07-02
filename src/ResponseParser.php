@@ -17,7 +17,7 @@ trait ResponseParser
         return [$headers, $body];
     }
 
-    public function toResponse($id, $responseStr, $errno, $errstr)
+    public function toResponse($url, $responseStr, $errno, $errstr)
     {
         $httpCode = 0;
         $error = [];
@@ -29,6 +29,6 @@ trait ResponseParser
             $httpCode = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
             list($headers, $body) = $this->parse($responseStr);
         }
-        return new Response($id, $httpCode, $body, $headers, $error);
+        return new Response($url, $httpCode, $body, $headers, $error);
     }
 }
