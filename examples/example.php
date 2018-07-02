@@ -11,7 +11,7 @@ $postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtok
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
+    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.5.0',
 ];
 
 $c1 = new Curl($options);

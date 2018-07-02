@@ -8,7 +8,7 @@ $postUrl = 'http://localhost/upload.php';//<?php var_dump($_FILES);
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
+    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.5.0',
 ];
 $c = new Curl($options);
 
