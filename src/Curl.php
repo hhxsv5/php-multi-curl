@@ -29,7 +29,7 @@ class Curl
         CURLOPT_CONNECTTIMEOUT => 3,
 
         //string
-        CURLOPT_USERAGENT      => 'PHP Multi Curl Client V1.0',
+        CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
     ];
 
     public function __construct(array $options = [])
@@ -103,12 +103,11 @@ class Curl
 
     public function responseToFile($filename)
     {
-        $response = $this->getResponse();
         $folder = dirname($filename);
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
-        return file_put_contents($filename, $response->getBody());
+        return file_put_contents($filename, $this->getResponse()->getBody());
     }
 
     public function getResponse()
