@@ -24,7 +24,6 @@ if ($response->hasError()) {
     //Success
     var_dump($response->getHttpCode(), $response->getBody());
 }
-return;
 
 //Multi http request
 $c2 = new Curl();

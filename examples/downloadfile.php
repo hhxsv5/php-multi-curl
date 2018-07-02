@@ -10,13 +10,12 @@ $options = [//The custom the curl options
 ];
 $c = new Curl($options);
 $c->makeGet($fileUrl);
-$ret = $c->exec();
-var_dump($ret);
-if ($ret) {
+$response = $c->exec();
+if ($response->hasError()) {
+    //Fail
+    var_dump($response->getError());
+} else {
     //Success
     $targetFile = './a/b/c/test.gif';
     var_dump($c->responseToFile($targetFile));
-} else {
-    //Fail
-    var_dump($c->getError());
 }
