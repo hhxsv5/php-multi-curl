@@ -19,7 +19,7 @@ class Response
     {
         $this->id = $id ?: uniqid('', true);
         $this->httpCode = $httpCode;
-        $this->headers = $headers;
+        $this->headers = array_change_key_case($headers, CASE_LOWER);
         $this->body = $body;
         $this->error = $error;
     }
@@ -31,6 +31,7 @@ class Response
 
     public function getHeader($key)
     {
+        $key = strtolower($key);
         return isset($this->headers[$key]) ? $this->headers[$key] : null;
     }
 
