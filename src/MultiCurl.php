@@ -2,14 +2,16 @@
 
 namespace Hhxsv5\PhpMultiCurl;
 
-class MultiCurl extends BaseCurl
+class MultiCurl
 {
+    protected $handle;
+
     /**
      * @var Curl[]
      */
     protected $curls = [];
 
-    protected function init(array $options = [])
+    public function __construct(array $options = [])
     {
         $this->handle = curl_multi_init();
 
@@ -68,14 +70,10 @@ class MultiCurl extends BaseCurl
         //Clean to re-exec && check success
         $success = true;
         foreach ($this->curls as $curl) {
-            $handle = $curl->getHandle();
-            $errno = curl_errno($handle);
-            $error = curl_error($handle);//Fixed: curl_errno() always return 0 when fail
-            if ($errno || $error) {
-                $curl->setError([$errno, $error]);
+            $curl->exec();
+            if ($curl->getResponse()->hasError()) {
                 $success = false;
             }
-
             curl_multi_remove_handle($this->handle, $curl->getHandle());
         }
         $this->curls = [];
@@ -83,11 +81,9 @@ class MultiCurl extends BaseCurl
         return $success;
     }
 
-    protected function hasError()
+    public function getCurls()
     {
-        //TODO: implements for PHP 7.1+
-        //check curl_multi_errno($this->handle)
-        return false;
+        return $this->curls;
     }
 
     public function __destruct()

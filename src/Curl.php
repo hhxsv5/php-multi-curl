@@ -2,15 +2,22 @@
 
 namespace Hhxsv5\PhpMultiCurl;
 
-class Curl extends BaseCurl
+class Curl
 {
+    use ResponseParser;
+
+    protected $handle;
+
+    /**
+     * @var Response
+     */
     protected $response;
 
     protected $multi = false;
 
     protected static $defaultOptions = [
         //bool
-        CURLOPT_HEADER         => false,
+        CURLOPT_HEADER         => true,
         CURLOPT_SSL_VERIFYPEER => false,
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_RETURNTRANSFER => true,
@@ -25,7 +32,7 @@ class Curl extends BaseCurl
         CURLOPT_USERAGENT      => 'PHP Multi Curl Client V1.0',
     ];
 
-    protected function init(array $options = [])
+    public function __construct(array $options = [])
     {
         $this->handle = curl_init();
         $finalOptions = $options + self::$defaultOptions;
@@ -74,48 +81,24 @@ class Curl extends BaseCurl
         $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
     }
 
-    public function exec(array $options = [])
+    public function exec()
     {
-        $response = curl_exec($this->handle);
-
-        $this->fetchResponse($response);
-
-        if ($this->response === false) {
-            return false;
+        if ($this->multi) {
+            $responseStr = curl_multi_getcontent($this->handle);
         } else {
-            return true;
+            $responseStr = curl_exec($this->handle);
         }
+
+        $id = spl_object_hash($this);
+        $errno = curl_errno($this->handle);
+        $errstr = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
+        $this->response = $this->toResponse($id, $responseStr, $errno, $errstr);
+        return $this->response;
     }
 
     public function setMulti($isMulti)
     {
         $this->multi = (bool)$isMulti;
-    }
-
-    protected function fetchResponse($response = null)
-    {
-        if ($response === null) {
-            if ($this->multi) {
-                $this->response = curl_multi_getcontent($this->handle);
-            }
-        } else {
-            $this->response = $response;
-        }
-
-        if ($this->hasError()) {
-            $this->response = false;
-        }
-    }
-
-    protected function hasError()
-    {
-        $errno = curl_errno($this->handle);
-        $error = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
-        if ($errno || $error) {
-            $this->error = [$errno, $error];
-            return true;
-        }
-        return false;
     }
 
     public function responseToFile($filename)
@@ -125,26 +108,17 @@ class Curl extends BaseCurl
         if (!file_exists($folder)) {
             mkdir($folder, 0777, true);
         }
-        return file_put_contents($filename, $response);
+        return file_put_contents($filename, $response->getBody());
     }
 
     public function getResponse()
     {
-        if ($this->response === null) {
-            $this->fetchResponse();
-        }
-
         return $this->response;
     }
 
     public function getHandle()
     {
         return $this->handle;
-    }
-
-    public function setError(array $error = null)
-    {
-        $this->error = $error;
     }
 
     public function __destruct()

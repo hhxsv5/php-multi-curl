@@ -13,18 +13,18 @@ $options = [//The custom the curl options
     CURLOPT_CONNECTTIMEOUT => 5,
     CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
 ];
+
 $c1 = new Curl($options);
 $c1->makeGet($getUrl);
-$ret = $c1->exec();
-var_dump($ret);
-if ($ret) {
-    //Success
-    var_dump($c1->getResponse());
-} else {
+$response = $c1->exec();
+if ($response->hasError()) {
     //Fail
-    var_dump($c1->getError());
+    var_dump($response->getError());
+} else {
+    //Success
+    var_dump($response->getHttpCode(), $response->getBody());
 }
-
+return;
 
 //Multi http request
 $c2 = new Curl();
@@ -36,14 +36,13 @@ $c3->makePost($postUrl);
 $mc = new MultiCurl();
 
 $mc->addCurls([$c2, $c3]);
-$ret = $mc->exec();
-var_dump($ret);
-if ($ret) {
-    //Success
-    var_dump($c2->getResponse(), $c3->getResponse());
+$allSuccess = $mc->exec();
+if ($allSuccess) {
+    //All success
+    var_dump($c2->getResponse()->getBody(), $c3->getResponse()->getBody());
 } else {
     //Some curls failed
-    var_dump($c2->getError(), $c3->getError());
+    var_dump($c2->getResponse()->getError(), $c3->getResponse()->getError());
 }
 
 //Reuse $mc
@@ -54,12 +53,11 @@ $c5 = new Curl();
 $c5->makePost($postUrl);
 
 $mc->addCurls([$c4, $c5]);
-$ret = $mc->exec();
-var_dump($ret);
-if ($ret) {
-    //Success
-    var_dump($c4->getResponse(), $c5->getResponse());
+$allSuccess = $mc->exec();
+if ($allSuccess) {
+    //All success
+    var_dump($c4->getResponse()->getBody(), $c5->getResponse()->getBody());
 } else {
     //Some curls failed
-    var_dump($c4->getError(), $c5->getError());
+    var_dump($c4->getResponse()->getError(), $c5->getResponse()->getError());
 }
