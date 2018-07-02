@@ -8,7 +8,7 @@ $start = microtime(true);
 
 $mc = new MultiCurl();
 
-for ($i = 0; $i < 1000; ++$i) {
+for ($i = 0; $i < 100; ++$i) {
     $c4 = new Curl();
     $c4->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
 
@@ -16,6 +16,9 @@ for ($i = 0; $i < 1000; ++$i) {
     $c5->makeGet('http://www.weather.com.cn/data/cityinfo/101270401.html');
 
     $mc->addCurls([$c4, $c5]);
-    $mc->exec();
 }
+$mc->exec();
 echo microtime(true) - $start;
+foreach ($mc->getCurls() as $curl) {
+    var_dump($curl->getResponse()->getBody());
+}

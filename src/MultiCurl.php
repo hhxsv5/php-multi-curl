@@ -76,9 +76,13 @@ class MultiCurl
             }
             curl_multi_remove_handle($this->handle, $curl->getHandle());
         }
-        $this->curls = [];
 
         return $success;
+    }
+
+    public function reset()
+    {
+        $this->curls = [];
     }
 
     public function getCurls()

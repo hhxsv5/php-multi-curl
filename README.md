@@ -25,7 +25,7 @@ use Hhxsv5\PhpMultiCurl\MultiCurl;
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.0',
+    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.5.0',
 ];
 
 $c1 = new Curl($options);
@@ -59,6 +59,7 @@ if ($allSuccess) {
 }
 
 //Reuse $mc
+$mc->reset();
 $c4 = new Curl();
 $c4->makeGet($getUrl);
 $c5 = new Curl();
@@ -77,7 +78,6 @@ if ($allSuccess) {
 ```PHP
 //Upload file
 $postUrl = 'http://localhost/upload.php';//<?php var_dump($_FILES);
-
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,

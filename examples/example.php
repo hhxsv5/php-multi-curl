@@ -45,6 +45,8 @@ if ($allSuccess) {
 }
 
 //Reuse $mc
+$mc->reset();
+
 $c4 = new Curl();
 $c4->makeGet($getUrl);
 
