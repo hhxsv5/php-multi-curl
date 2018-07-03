@@ -33,7 +33,7 @@ class Curl
         CURLOPT_CONNECTTIMEOUT => 3,
 
         //string
-        CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
+        CURLOPT_USERAGENT      => 'Multi-cURL client v1.5.0',
     ];
 
     public function __construct($id = null, array $options = [])
