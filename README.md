@@ -123,11 +123,10 @@ if ($response->hasError()) {
 ```
 
 ```PHP
-//require '../vendor/autoload.php';
+require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 
-//Download file
-$fileUrl = 'http://localhost/test.gif';//<?php var_dump($_FILES);
+$fileUrl = 'https://avatars2.githubusercontent.com/u/7278743?s=460&v=4';//<?php var_dump($_FILES);
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 3600,//1 hour
     CURLOPT_CONNECTTIMEOUT => 10,
@@ -141,7 +140,7 @@ if ($response->hasError()) {
     var_dump($response->getError());
 } else {
     //Success
-    $targetFile = './a/b/c/test.gif';
+    $targetFile = './a/b/c/test.png';
     var_dump($c->responseToFile($targetFile));
 }
 ```
