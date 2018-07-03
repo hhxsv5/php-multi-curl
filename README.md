@@ -1,4 +1,4 @@
-PHP Multi-Curl
+Multiple cURL in PHP
 ======
 
 A simple and efficient library wrapping curl_multi_* is used to handle parallel http requests.
