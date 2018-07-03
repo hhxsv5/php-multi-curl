@@ -57,15 +57,16 @@ class Curl
             }
         }
 
-        curl_setopt($this->handle, CURLOPT_URL, $url);
-        curl_setopt($this->handle, CURLOPT_HTTPGET, true);//HTTP GET
-        $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt_array($this->handle, [CURLOPT_URL => $url, CURLOPT_HTTPGET => true]);
+
+        if (!empty($headers)) {
+            curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
+        }
     }
 
     public function makePost($url, $params = null, array $headers = [])
     {
-        curl_setopt($this->handle, CURLOPT_URL, $url);
-        curl_setopt($this->handle, CURLOPT_POST, true);//HTTP POST
+        curl_setopt_array($this->handle, [CURLOPT_URL => $url, CURLOPT_POST => true]);
 
         //CURLFile support
         if (is_array($params)) {
@@ -82,9 +83,13 @@ class Curl
         }
 
         //$params: array => multipart/form-data, string => application/x-www-form-urlencoded
-        $params AND curl_setopt($this->handle, CURLOPT_POSTFIELDS, $params);
+        if (!empty($params)) {
+            curl_setopt($this->handle, CURLOPT_POSTFIELDS, $params);
+        }
 
-        $headers AND curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
+        if (!empty($headers)) {
+            curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
+        }
     }
 
     public function exec()
