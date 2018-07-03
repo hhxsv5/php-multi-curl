@@ -25,7 +25,6 @@ class Curl
 
         //int
         CURLOPT_MAXREDIRS      => 3,
-        CURLOPT_SSL_VERIFYHOST => 0,
         CURLOPT_TIMEOUT        => 6,
         CURLOPT_CONNECTTIMEOUT => 3,
 
