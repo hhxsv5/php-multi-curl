@@ -7,6 +7,7 @@ $fileUrl = 'http://localhost/test.gif';//<?php var_dump($_FILES);
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 3600,//1 hour
     CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
 ];
 $c = new Curl($options);
 $c->makeGet($fileUrl);
