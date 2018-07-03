@@ -25,29 +25,46 @@ use Hhxsv5\PhpMultiCurl\MultiCurl;
 $options = [//The custom the curl options
     CURLOPT_TIMEOUT        => 10,
     CURLOPT_CONNECTTIMEOUT => 5,
-    CURLOPT_USERAGENT      => 'Multi-Curl Client V1.5.0',
+    CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
 ];
 
-$c1 = new Curl($options);
-$c1->makeGet($getUrl);
-$response = $c1->exec();
+$c = new Curl($options);
+$c->makeGet($getUrl);
+$response = $c->exec();
 if ($response->hasError()) {
     //Fail
     var_dump($response->getError());
 } else {
     //Success
-    var_dump($response->getHttpCode(), $response->getBody());
+    var_dump($response->getBody());
+}
+
+//Reuse $c
+$c->makePost($postUrl);
+$response = $c->exec();
+if ($response->hasError()) {
+    //Fail
+    var_dump($response->getError());
+} else {
+    //Success
+    var_dump($response->getBody());
 }
 ```
  
 ```PHP
+//require '../vendor/autoload.php';
+use Hhxsv5\PhpMultiCurl\Curl;
+use Hhxsv5\PhpMultiCurl\MultiCurl;
+
 //Multi http request
 $c2 = new Curl();
 $c2->makeGet($getUrl);
+
 $c3 = new Curl();
 $c3->makePost($postUrl);
 
 $mc = new MultiCurl();
+
 $mc->addCurls([$c2, $c3]);
 $allSuccess = $mc->exec();
 if ($allSuccess) {
@@ -58,12 +75,17 @@ if ($allSuccess) {
     var_dump($c2->getResponse()->getError(), $c3->getResponse()->getError());
 }
 
+echo PHP_EOL;
+
 //Reuse $mc
 $mc->reset();
+
 $c4 = new Curl();
 $c4->makeGet($getUrl);
+
 $c5 = new Curl();
 $c5->makePost($postUrl);
+
 $mc->addCurls([$c4, $c5]);
 $allSuccess = $mc->exec();
 if ($allSuccess) {
@@ -76,6 +98,9 @@ if ($allSuccess) {
 ```
 
 ```PHP
+//require '../vendor/autoload.php';
+use Hhxsv5\PhpMultiCurl\Curl;
+
 //Upload file
 $postUrl = 'http://localhost/upload.php';//<?php var_dump($_FILES);
 $options = [//The custom the curl options
@@ -98,6 +123,9 @@ if ($response->hasError()) {
 ```
 
 ```PHP
+//require '../vendor/autoload.php';
+use Hhxsv5\PhpMultiCurl\Curl;
+
 //Download file
 $fileUrl = 'http://localhost/test.gif';//<?php var_dump($_FILES);
 $options = [//The custom the curl options

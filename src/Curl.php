@@ -40,13 +40,13 @@ class Curl
     {
         $this->id = $id;
         $this->options = $options + self::$defaultOptions;
-        $this->meetPhp55 = version_compare(PHP_VERSION, '5.5.0') >= 0;
+        $this->meetPhp55 = version_compare(PHP_VERSION, '5.5.0', '>=');
     }
 
     public function init()
     {
         if ($this->handle !== null && $this->meetPhp55) {
-            curl_reset($this->handle);
+            curl_reset($this->handle); //curl_reset(): since 5.5.0
         } else {
             $this->handle = curl_init();
         }
@@ -88,7 +88,7 @@ class Curl
         //CURLFile support
         if (is_array($params)) {
             $hasUploadFile = false;
-            if (version_compare(PHP_VERSION, '5.5.0') >= 0) {//CURLFile: since 5.5.0
+            if ($this->meetPhp55) {//CURLFile: since 5.5.0
                 foreach ($params as $k => $v) {
                     if ($v instanceof \CURLFile) {
                         $hasUploadFile = true;
