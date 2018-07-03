@@ -9,12 +9,16 @@ class Curl
     protected $id;
     protected $handle;
 
+    protected $meetPhp55 = false;
+
     /**
      * @var Response
      */
     protected $response;
 
     protected $multi = false;
+
+    protected $options = [];
 
     protected static $defaultOptions = [
         //bool
@@ -35,9 +39,18 @@ class Curl
     public function __construct($id = null, array $options = [])
     {
         $this->id = $id;
-        $this->handle = curl_init();
-        $finalOptions = $options + self::$defaultOptions;
-        curl_setopt_array($this->handle, $finalOptions);
+        $this->options = $options + self::$defaultOptions;
+        $this->meetPhp55 = version_compare(PHP_VERSION, '5.5.0') >= 0;
+    }
+
+    public function init()
+    {
+        if ($this->handle !== null && $this->meetPhp55) {
+            curl_reset($this->handle);
+        } else {
+            $this->handle = curl_init();
+        }
+        curl_setopt_array($this->handle, $this->options);
     }
 
     public function getId()
@@ -47,6 +60,8 @@ class Curl
 
     public function makeGet($url, $params = null, array $headers = [])
     {
+        $this->init();
+
         if (is_string($params) || is_array($params)) {
             is_array($params) AND $params = http_build_query($params);
             $url = rtrim($url, '?');
@@ -66,6 +81,8 @@ class Curl
 
     public function makePost($url, $params = null, array $headers = [])
     {
+        $this->init();
+
         curl_setopt_array($this->handle, [CURLOPT_URL => $url, CURLOPT_POST => true]);
 
         //CURLFile support

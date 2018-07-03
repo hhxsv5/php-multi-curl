@@ -14,16 +14,29 @@ $options = [//The custom the curl options
     CURLOPT_USERAGENT      => 'Multi-Curl Client v1.5.0',
 ];
 
-$c1 = new Curl($options);
-$c1->makeGet($getUrl);
-$response = $c1->exec();
+$c = new Curl($options);
+$c->makeGet($getUrl);
+$response = $c->exec();
 if ($response->hasError()) {
     //Fail
     var_dump($response->getError());
 } else {
     //Success
-    var_dump($response->getHttpCode(), $response->getBody());
+    var_dump($response->getBody());
 }
+
+//Reuse $c
+$c->makePost($postUrl);
+$response = $c->exec();
+if ($response->hasError()) {
+    //Fail
+    var_dump($response->getError());
+} else {
+    //Success
+    var_dump($response->getBody());
+}
+
+echo PHP_EOL;
 
 //Multi http request
 $c2 = new Curl();
@@ -43,6 +56,8 @@ if ($allSuccess) {
     //Some curls failed
     var_dump($c2->getResponse()->getError(), $c3->getResponse()->getError());
 }
+
+echo PHP_EOL;
 
 //Reuse $mc
 $mc->reset();
