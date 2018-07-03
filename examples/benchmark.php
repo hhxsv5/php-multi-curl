@@ -8,7 +8,7 @@ $start = microtime(true);
 
 $mc = new MultiCurl();
 
-for ($i = 0; $i < 100; ++$i) {
+for ($i = 0; $i < 200; ++$i) {
     $c4 = new Curl();
     $c4->makeGet('http://www.weather.com.cn/data/cityinfo/101270101.html');
 
@@ -18,7 +18,14 @@ for ($i = 0; $i < 100; ++$i) {
     $mc->addCurls([$c4, $c5]);
 }
 $mc->exec();
-echo microtime(true) - $start;
+
+echo sprintf('Total cost: %fs', microtime(true) - $start), PHP_EOL;
+
 foreach ($mc->getCurls() as $curl) {
-    var_dump($curl->getResponse()->getBody());
+    $response = $curl->getResponse();
+    if ($response->hasError()) {
+        var_dump($response->getError());
+    } else {
+        var_dump($response->getBody());
+    }
 }
