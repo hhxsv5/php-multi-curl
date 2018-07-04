@@ -120,7 +120,7 @@ class Curl
         $errno = curl_errno($this->handle);
         $errstr = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
         $url = curl_getinfo($this->handle, CURLINFO_EFFECTIVE_URL);
-        $this->response = $this->toResponse($url, $responseStr, $errno, $errstr);
+        $this->response = $this->make($url, $responseStr, $errno, $errstr);
         return $this->response;
     }
 

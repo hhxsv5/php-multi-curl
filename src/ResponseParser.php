@@ -17,7 +17,7 @@ trait ResponseParser
         return [$headers, $body];
     }
 
-    public function toResponse($url, $responseStr, $errno, $errstr)
+    public function make($url, $responseStr, $errno, $errstr)
     {
         $httpCode = 0;
         $error = [];
