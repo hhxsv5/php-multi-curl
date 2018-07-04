@@ -56,7 +56,7 @@ class MultiCurl
         $timeout = 0.001;
         $active = false;
         do {
-            while (($mrc = curl_multi_exec($this->handle, $active)) == CURLM_CALL_MULTI_PERFORM) {
+            while (($mrc = curl_multi_exec($this->handle, $active)) === CURLM_CALL_MULTI_PERFORM) {
                 ;
             }
             if ($active && curl_multi_select($this->handle, $timeout) === -1) {
