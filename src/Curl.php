@@ -4,8 +4,6 @@ namespace Hhxsv5\PhpMultiCurl;
 
 class Curl
 {
-    use ResponseParser;
-
     protected $id;
     protected $handle;
 
@@ -120,7 +118,8 @@ class Curl
         $errno = curl_errno($this->handle);
         $errstr = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
         $url = curl_getinfo($this->handle, CURLINFO_EFFECTIVE_URL);
-        $this->response = $this->make($url, $responseStr, $errno, $errstr);
+        $code = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
+        $this->response = Response::make($url, $code, $responseStr, $errno, $errstr);
         return $this->response;
     }
 

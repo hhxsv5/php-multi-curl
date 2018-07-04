@@ -64,4 +64,31 @@ class Response
     {
         return $this->body;
     }
+
+    public static function parse($str)
+    {
+        $headers = [];
+        list($header, $body) = explode("\r\n\r\n", $str, 2);
+        $data = explode("\n", $header);
+        array_shift($data);//Remove status
+
+        foreach ($data as $part) {
+            $middle = explode(':', $part);
+            $headers[trim($middle[0])] = trim($middle[1]);
+        }
+        return [$headers, $body];
+    }
+
+    public static function make($url, $code, $responseStr, $errno, $errstr)
+    {
+        $error = [];
+        if ($errno || $errstr) {
+            $headers = [];
+            $body = '';
+            $error = [$errno, $errstr];
+        } else {
+            list($headers, $body) = static::parse($responseStr);
+        }
+        return new static($url, $code, $body, $headers, $error);
+    }
 }
