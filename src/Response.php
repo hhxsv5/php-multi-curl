@@ -65,29 +65,32 @@ class Response
         return $this->body;
     }
 
-    public static function parse($str)
+    public static function parse($responseStr, $headerSize)
     {
-        $headers = [];
-        list($header, $body) = explode("\r\n\r\n", $str, 2);
-        $data = explode("\n", $header);
-        array_shift($data);//Remove status
+        $header = substr($responseStr, 0, $headerSize);
+        $body = substr($responseStr, $headerSize);
+        $lines = explode("\n", $header);
+        array_shift($lines);//Remove status
 
-        foreach ($data as $part) {
+        $headers = [];
+        foreach ($lines as $part) {
             $middle = explode(':', $part);
-            $headers[trim($middle[0])] = trim($middle[1]);
+            $key = trim($middle[0]);
+            if ($key === '') {
+                continue;
+            }
+            $headers[$key] = isset($middle[1]) ? trim($middle[1]) : '';
         }
         return [$headers, $body];
     }
 
-    public static function make($url, $code, $responseStr, $errno, $errstr)
+    public static function make($url, $code, $responseStr, $headerSize, array $error)
     {
-        $error = [];
-        if ($errno || $errstr) {
+        if (!empty($error[0]) || !empty($error[1])) {
             $headers = [];
             $body = '';
-            $error = [$errno, $errstr];
         } else {
-            list($headers, $body) = static::parse($responseStr);
+            list($headers, $body) = static::parse($responseStr, $headerSize);
         }
         return new static($url, $code, $body, $headers, $error);
     }

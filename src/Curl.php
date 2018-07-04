@@ -119,7 +119,8 @@ class Curl
         $errstr = curl_error($this->handle);//Fix: curl_errno() always return 0 when fail
         $url = curl_getinfo($this->handle, CURLINFO_EFFECTIVE_URL);
         $code = curl_getinfo($this->handle, CURLINFO_HTTP_CODE);
-        $this->response = Response::make($url, $code, $responseStr, $errno, $errstr);
+        $headerSize = curl_getinfo($this->handle, CURLINFO_HEADER_SIZE);
+        $this->response = Response::make($url, $code, $responseStr, $headerSize, [$errno, $errstr]);
         return $this->response;
     }
 
