@@ -43,9 +43,16 @@ class Curl
 
     public function init()
     {
-        if ($this->handle !== null && $this->meetPhp55) {
-            curl_reset($this->handle); //curl_reset(): since 5.5.0
+        if ($this->meetPhp55) {
+            if ($this->handle === null) {
+                $this->handle = curl_init();
+            } else {
+                curl_reset($this->handle); //Reuse cUrl handle: since 5.5.0
+            }
         } else {
+            if ($this->handle !== null) {
+                curl_close($this->handle);
+            }
             $this->handle = curl_init();
         }
         curl_setopt_array($this->handle, $this->options);
