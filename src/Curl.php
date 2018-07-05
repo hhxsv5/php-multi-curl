@@ -41,7 +41,7 @@ class Curl
         $this->meetPhp55 = version_compare(PHP_VERSION, '5.5.0', '>=');
     }
 
-    public function init()
+    protected function init()
     {
         if ($this->meetPhp55) {
             if ($this->handle === null) {
