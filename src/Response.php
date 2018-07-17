@@ -79,7 +79,12 @@ class Response
             if ($key === '') {
                 continue;
             }
-            $headers[$key] = isset($middle[1]) ? trim($middle[1]) : '';
+            if (isset($headers[$key])) {
+                $headers[$key] = (array)$headers[$key];
+                $headers[$key][] = isset($middle[1]) ? trim($middle[1]) : '';
+            } else {
+                $headers[$key] = isset($middle[1]) ? trim($middle[1]) : '';
+            }
         }
         return [$headers, $body];
     }
