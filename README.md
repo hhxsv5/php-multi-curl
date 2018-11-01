@@ -10,16 +10,19 @@ A simple and efficient library wrapping curl_multi_* is used to handle parallel 
 
 ## Installation via Composer([packagist](https://packagist.org/packages/hhxsv5/php-multi-curl))
 
-```BASH
+```bash
 composer require "hhxsv5/php-multi-curl:~1.0" -vvv
 ```
 
 ## Usage
 
-```PHP
+```php
 //require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 use Hhxsv5\PhpMultiCurl\MultiCurl;
+
+$getUrl = 'http://www.weather.com.cn/data/cityinfo/101270101.html';
+$postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtoken';
 
 //Single http request
 $options = [//The custom options of cURL
@@ -51,10 +54,13 @@ if ($response->hasError()) {
 }
 ```
  
-```PHP
+```php
 //require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 use Hhxsv5\PhpMultiCurl\MultiCurl;
+
+$getUrl = 'http://www.weather.com.cn/data/cityinfo/101270101.html';
+$postUrl = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=yourtoken';
 
 //Multi http request
 $c2 = new Curl();
@@ -97,7 +103,7 @@ if ($allSuccess) {
 }
 ```
 
-```PHP
+```php
 //require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 
@@ -122,7 +128,7 @@ if ($response->hasError()) {
 }
 ```
 
-```PHP
+```php
 require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 
@@ -144,10 +150,6 @@ if ($response->hasError()) {
     var_dump($c->responseToFile($targetFile));
 }
 ```
-
-## TODO
-
-* Anything what you want
 
 ## License
 
