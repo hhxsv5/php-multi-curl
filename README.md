@@ -129,7 +129,7 @@ if ($response->hasError()) {
 ```
 
 ```php
-require '../vendor/autoload.php';
+//require '../vendor/autoload.php';
 use Hhxsv5\PhpMultiCurl\Curl;
 
 $fileUrl = 'https://avatars2.githubusercontent.com/u/7278743?s=460&v=4';//<?php var_dump($_FILES);
