@@ -157,6 +157,8 @@ class Curl
 
     public function __destruct()
     {
-        curl_close($this->handle);
+        if ($this->handle !== null) {
+            curl_close($this->handle);
+        }
     }
 }
