@@ -14,7 +14,7 @@ $options = [//The custom options of cURL
     CURLOPT_USERAGENT      => 'Multi-cURL client v1.5.0',
 ];
 
-$c = new Curl($options);
+$c = new Curl(null, $options);
 $c->makeGet($getUrl);
 $response = $c->exec();
 if ($response->hasError()) {

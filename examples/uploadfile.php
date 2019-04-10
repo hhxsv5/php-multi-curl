@@ -10,7 +10,7 @@ $options = [//The custom options of cURL
     CURLOPT_CONNECTTIMEOUT => 5,
     CURLOPT_USERAGENT      => 'Multi-cURL client v1.5.0',
 ];
-$c = new Curl($options);
+$c = new Curl(null, $options);
 
 $file1 = new CURLFile('./olddriver.gif', 'image/gif', 'name1');
 $params = ['file1' => $file1];
